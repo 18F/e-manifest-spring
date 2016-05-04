@@ -19,14 +19,17 @@ public class EmbeddedServer {
 	private static final String APP_CONTEXT_PATH = "/emanifest";
 	private static final String JETTY_TEMP_DIRECTORY = "jettytmp";
 	private static final String ALL_PATHS = "/*";
-	
+  private static final String ENV_PORT_PROPERTY = "PORT";
+  
+	private static final int DEFAULT_PORT = 8180;
+  
 	private static final Logger logger = LoggerFactory.getLogger(EmbeddedServer.class);
 
 	private static Server server;
-	
+
 	public static final void main(String[] args) {
 		try {
-			int port = 8180;
+      int port = getPort();
 			startServer(port);
 		} catch (Exception e) {
 			logger.error("Failed to start server.", e);
@@ -34,7 +37,23 @@ public class EmbeddedServer {
 			logger.error("Server died.", t);
 		}
 	}
-	
+
+  private static int getPort() {
+    int port = DEFAULT_PORT;
+    String envPort = System.getenv(ENV_PORT_PROPERTY);
+    logger.info("ENV[{}]: {}", ENV_PORT_PROPERTY, envPort);
+    
+    if (envPort != null) {        
+      try {
+        port = Integer.parseInt(envPort, 10);
+        logger.info("detected env port: {}", port);
+      } catch(NumberFormatException nfe) {
+      }
+    }
+    
+    return port;
+  }
+
 	private static void startServer(int port) throws IOException,
 			Exception, InterruptedException {
 		server = configureServer(port);
@@ -66,6 +85,8 @@ public class EmbeddedServer {
 		connector.setIdleTimeout(60000);
 		connector.setPort(port);
 		server.addConnector(connector);
+
+    logger.info("bound server to port: {}", port);
 	}
 	
 	private static void configureWebAppContextHandler(final Server server)
