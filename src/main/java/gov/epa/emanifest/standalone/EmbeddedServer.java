@@ -73,22 +73,6 @@ public class EmbeddedServer {
 		return server;
 	}
 
-	private static void configureHttpConnector(final Server server,
-			final int port) {
-		ServerConnector http = new ServerConnector(server);
-		http.setHost("127.0.0.1");
-		configureStandardServerSettings(server, http, port);
-	}
-
-	private static void configureStandardServerSettings(final Server server,
-			ServerConnector connector, final int port) {
-		connector.setIdleTimeout(60000);
-		connector.setPort(port);
-		server.addConnector(connector);
-
-    logger.info("bound server to port: {}", port);
-	}
-	
 	private static void configureWebAppContextHandler(final Server server)
 			throws IOException {
 		WebAppContext context = new WebAppContext();
@@ -101,6 +85,22 @@ public class EmbeddedServer {
 		context.setWar(location.toExternalForm());
 		server.setHandler(context);
 		configureTempDirectory(context);
+	}
+
+	private static void configureHttpConnector(final Server server,
+			final int port) {
+		ServerConnector http = new ServerConnector(server);
+		http.setHost("0.0.0.0");
+		configureStandardServerSettings(server, http, port);
+	}
+
+	private static void configureStandardServerSettings(final Server server,
+			ServerConnector connector, final int port) {
+		connector.setIdleTimeout(60000);
+		connector.setPort(port);
+		server.addConnector(connector);
+
+    logger.info("bound server to port: {}", port);
 	}
 	
 	private static void configureTempDirectory(WebAppContext context) throws IOException {
