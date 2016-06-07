@@ -1,5 +1,4 @@
 # e-manifest-spring
-Java/Spring version of the EPA e-Manifest project.
 
 Functionality based on previous discovery implementation at
 https://github.com/18F/e-manifest.
