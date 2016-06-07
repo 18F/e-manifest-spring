@@ -1,7 +1,7 @@
 # e-manifest-spring
 
 Functionality based on previous discovery implementation at
-https://github.com/18F/e-manifest.
+https://github.com/18F/e-manifest
 
 ## Developer onboarding
 
